@@ -43,12 +43,13 @@ const DisplayJobs = ({ me }) => {
   useEffect(() => {
     setDelete(null);
     async function fetchJob() {
-      let res = await configFn.getAllDBs();
+      let res;
       if (Object.keys(state.user.userData).length === 6) {
         res = await configFn.getDBemail(state.user.userData.email);
       } else {
         res = await configFn.getAllDBs();
       }
+      const data = await res.json();
       console.log(data);
       setData(data);
       setLoding(false);
