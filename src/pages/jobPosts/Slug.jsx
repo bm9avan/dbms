@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const slug = () => {
-  return (
-    <div>
-      slug
-    </div>
-  )
-}
+  return <div>slug</div>;
+};
 
-export default slug
+export default slug;

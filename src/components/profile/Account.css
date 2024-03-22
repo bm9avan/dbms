@@ -14,13 +14,24 @@
   text-align: center;
 }
 
-h1 {
-  color: #2c3e50;
+.usertab {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  color: #046f6f;
 }
 
-.user-details {
-  margin-top: 20px;
-  text-align: left;
+.usertab > div {
+  display: flex;
+  align-items: center;
+}
+
+.usertab > div:first-of-type {
+  text-transform: capitalize;
+}
+
+h1 {
+  color: #2c3e50;
 }
 
 p {

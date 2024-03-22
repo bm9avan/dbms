@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import authFn from "../appWrite/authFn";
+import authFn from "../utils/authFn";
 
 const Verify = () => {
   const [message, setMessage] = useState(null);
@@ -14,6 +14,7 @@ const Verify = () => {
         setMessage("User Verification Sucessful");
       })
       .catch((error) => {
+        src / pages / Verify.jsx;
         setMessage(null);
         setError(error.message);
       })

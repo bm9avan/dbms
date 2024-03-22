@@ -17,7 +17,7 @@ const NavBar = () => {
       {isLoading ? "Loading..." : <Outlet />}
       <nav className="navbar" onClick={toggleMenu}>
         <div className="navbar-logo" to={"/"}>
-          @bm9avan
+          JOB PORTAL
         </div>
         <div className={`navbar-links ${showMenu ? "show" : ""}`}>
           <NavLink
@@ -25,12 +25,6 @@ const NavBar = () => {
             to="/"
           >
             Home
-          </NavLink>
-          <NavLink
-            className={({ isActive }) => (isActive ? "active" : "")}
-            to="/about"
-          >
-            About
           </NavLink>
           <NavLink
             className={({ isActive }) => (isActive ? "active" : "")}

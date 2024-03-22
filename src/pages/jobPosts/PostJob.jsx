@@ -1,30 +1,37 @@
 import React, { useEffect, useState } from "react";
-import "../../components/profile/Form.css"; // Replace 'YourFormStyles.css' with the actual name of your CSS file
-import configFn from "../../appWrite/configFn";
-import { useSelector } from "react-redux";
-import authFn from "../../appWrite/authFn";
+import "../../components/profile/Form.css";
+import configFn from "../../utils/configFn";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { configActions } from "../../store/configStore";
 
 const PostJob = () => {
   const [error, setError] = useState(null);
   const [status, setStatus] = useState(false);
   const [intialData, setIntialData] = useState({
-    cgpa: "6.5",
-    date: "",
-    desc: "",
-    skills: "",
     title: "",
+    descr: "",
+    exp: 0,
+    profile: "",
+    techs: "",
+    email: "",
   });
   const [btn, setBtn] = useState(null);
   const state = useSelector((s) => s.auth);
   const user = state.user;
   const id = useSelector((s) => s.config.postId);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (id) {
+      console.log(id);
       configFn
-        .getDB(id)
-        .then((data) => setIntialData(data))
+        .getDBid(id)
+        .then((data) => data.json())
+        .then((data) => {
+          console.log(data);
+          setIntialData(data[0]);
+        })
         .catch((error) => setError(error));
     }
   }, [id]);
@@ -45,45 +52,11 @@ const PostJob = () => {
     );
   }
 
-  if (user && !user.userData.emailVerification) {
-    if (btn && typeof btn === "object") {
-      return (
-        <>
-          <div className="message">
-            Mail has sent{" "}
-            <a href="https://mail.google.com/mail/" target="_blank">
-              <button>Open Gmail</button>
-            </a>
-          </div>
-          <br />
-          <div>Reload the window after verification</div>
-        </>
-      );
-    }
+  if (Object.keys(user.userData).length !== 6) {
     return (
-      <>
-        {error && <div className="error">{error}</div>}
-        <div className="message">
-          Unverified -{" "}
-          <button
-            className="navbar-btn"
-            onClick={() => {
-              setBtn("Sending Verification mail...");
-              authFn
-                .emailVerification()
-                .then((data) => {
-                  setBtn(data);
-                })
-                .catch((error) => setError(error.message));
-              // .finally(() => setBtn(null));
-            }}
-            disabled={btn}
-          >
-            {btn ? btn : "Verify"}
-          </button>{" "}
-          your account to post Job.
-        </div>
-      </>
+      <div className="message">
+        Unauthorized - to post job you need to be Job Provider.
+      </div>
     );
   }
 
@@ -98,8 +71,6 @@ const PostJob = () => {
     const fd = new FormData(e.target);
     const formData = Object.fromEntries(fd.entries());
     formData.email = user.userData.email;
-    formData.name = user.userData.name;
-    formData.usn = user.userData.$id;
     if (id) {
       configFn
         .updateDB(id, formData)
@@ -108,7 +79,10 @@ const PostJob = () => {
           setStatus(true);
         })
         .catch((error) => setError(error.message))
-        .finally(() => setBtn(null));
+        .finally(() => {
+          dispatch(configActions.endEditingPost());
+          setBtn(null);
+        });
     } else {
       configFn
         .postDB(formData)
@@ -124,7 +98,7 @@ const PostJob = () => {
   if (status) {
     return (
       <>
-        sucess
+        success
         <button onClick={() => setStatus(false)}>Add another post</button>
       </>
     );
@@ -142,40 +116,39 @@ const PostJob = () => {
           required
         />
 
-        <label htmlFor="date">Date:</label>
-        <input
-          type="date"
-          id="date"
-          name="date"
-          required={!id}
-          defaultValue={Date(intialData.date)}
-        />
-
-        <label htmlFor="desc">Description (Optional):</label>
+        <label htmlFor="profile">Profile:</label>
         <input
           type="text"
-          id="desc"
-          name="desc"
-          defaultValue={intialData.desc}
+          id="profile"
+          name="profile"
+          defaultValue={intialData.profile}
         />
 
-        <label htmlFor="skills">Skills (Separate by comma):</label>
+        <label htmlFor="descr">Description:</label>
         <input
           type="text"
-          id="skills"
-          name="skills"
+          id="descr"
+          name="descr"
+          defaultValue={intialData.descr}
+        />
+
+        <label htmlFor="techs">Techs (Separate by comma):</label>
+        <input
+          type="text"
+          id="techs"
+          name="techs"
           required
-          defaultValue={intialData.skills}
+          defaultValue={intialData.techs}
           placeholder="Technologies (comma separated)"
         />
 
-        <label htmlFor="cgpa">CGPA:</label>
+        <label htmlFor="exp">Experience:</label>
         <input
           type="number"
-          step={0.01}
-          id="cgpa"
-          name="cgpa"
-          defaultValue={intialData.cgpa}
+          step={1}
+          id="exp"
+          name="exp"
+          defaultValue={intialData.exp}
         />
 
         {error && <div className="error">{error}</div>}

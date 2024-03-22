@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/authStore";
 import { useEffect, useRef, useState } from "react";
-import authFn from "../../appWrite/authFn";
+import authFn from "../../utils/authFn";
+// import { verify } from "jsonwebtoken";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -21,11 +22,19 @@ const Login = () => {
     authFn
       .login(formData.email, formData.password)
       .then((data) => {
+        console.log(data);
         // window.location.reload();
-        authFn
-          .getCurrentUser()
-          .then((userData) => dispatch(authActions.login({ userData })))
-          .catch((error) => setError(error.message));
+        return data.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        // console.log(verify(data, process.env.VITE_JWT_PRIVATEKEY));
+        // return jwt.verify(cookies, process.env.VITE_JWT_PRIVATEKEY);
+        localStorage.setItem("auth", data.token);
+        dispatch(authActions.login({ userData: authFn.getCurrentUser() }));
       })
       .catch((error) => setError(error.message))
       .finally(() => setBtn(null));
@@ -38,13 +47,7 @@ const Login = () => {
         <input ref={firstRef} type="email" id="email" name="email" required />
 
         <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          minLength={8}
-          required
-        />
+        <input type="password" id="password" name="password" required />
         {error && <div className="error">{error}</div>}
         <button type="submit" disabled={btn}>
           {btn ? btn : "Login"}

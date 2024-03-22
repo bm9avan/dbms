@@ -3,7 +3,6 @@ import Form from "./components/profile/Form";
 import { useDispatch } from "react-redux";
 import { authActions } from "./store/authStore";
 import NavBar from "./components/NavBar";
-import authFn from "./appWrite/authFn";
 import { Home, About, Error } from "./pages";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import JobRouter from "./pages/jobPosts/JobRouter";
@@ -11,6 +10,7 @@ import Slug from "./pages/jobPosts/Slug";
 import DisplayJobs from "./pages/jobPosts/DisplayJobs";
 import PostJob from "./pages/jobPosts/PostJob";
 import Verify from "./pages/Verify";
+import authFn from "./utils/authFn";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -72,16 +72,13 @@ function App() {
   ]);
 
   useEffect(() => {
-    authFn
-      .getCurrentUser()
-      .then((userData) => {
-        if (userData) {
-          dispatch(authActions.login({ userData }));
-        } else {
-          dispatch(authActions.logout());
-        }
-      })
-      .finally(() => setLoading(false));
+    const userData = authFn.getCurrentUser();
+    if (userData) {
+      dispatch(authActions.login({ userData }));
+    } else {
+      dispatch(authActions.logout());
+    }
+    setLoading(false);
   }, []);
 
   return <RouterProvider router={router} />;
