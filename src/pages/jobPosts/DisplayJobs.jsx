@@ -89,7 +89,8 @@ const DisplayJobs = ({ me }) => {
     <div>
       <ToastContainer />
       {me && applied && (
-        <table>
+      <div className=" alterwidth">
+        <table  className="applied-job-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -106,7 +107,7 @@ const DisplayJobs = ({ me }) => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> </div>
       )}
       {!me && data
         ? data.map((job) => {
