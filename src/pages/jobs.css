@@ -112,3 +112,30 @@
     display: block;
   }
 }
+/*Added css foe applied jobs view*/
+.alterwidth {
+  margin: auto;
+  width: 40vw;
+}
+.applied-job-table {
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.applied-job-table th {
+  
+  padding: 10px;
+  text-align: center;
+  border-bottom: 2px solid #ddd;
+}
+.applied-job-table td {
+   
+  padding: 10px;
+  text-align: center;
+  border-bottom: 0px solid #ddd;
+}
