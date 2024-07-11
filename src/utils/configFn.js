@@ -65,6 +65,27 @@ const configFn = {
       import.meta.env.VITE_BACKEND_API_URL + `/getapplied?email=${email}`
     );
   },
+
+  appliedBYprovider: function (email) {
+    return fetch(
+      import.meta.env.VITE_BACKEND_API_URL +
+        `/getapplied?email=${email}&provider=${true}`
+    );
+  },
+
+  removeApplied: function (jobID, seekerEmail) {
+    return fetch(
+      import.meta.env.VITE_BACKEND_API_URL +
+        `/removeapplied?jobid=${jobID}&seekerEmail=${seekerEmail}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+  },
 };
 
 export default configFn;
